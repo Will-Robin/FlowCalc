@@ -131,22 +131,28 @@ class Flow_Experiment:
 
             # Create a timesteps
             time_steps_in_seconds = np.diff(self.syringes[s].time)
+
+            # The last flow step will be held for as long as the one before it
             time_steps_in_seconds = np.hstack(
                                                 (
-                                                time_steps_in_seconds[0],
-                                                time_steps_in_seconds
+                                                time_steps_in_seconds,
+                                                time_steps_in_seconds[-1],
                                                 )
                                             )
 
             time_steps_in_ms = np.round(time_steps_in_seconds, 1)*1000
 
-            with open(filename, "w") as f:
-                f.write(f"{self.flow_unit}\n")
-                f.write(f"{number_of_cycles}\n")
-                for x in range(0,len(self.syringes[s].flow_profile)):
-                    flow_val = self.syringes[s].flow_profile[x]
-                    time_step = time_steps_in_ms[x]
-                    f.write(f"{time_step}\t {flow_val}\t{valve_val}\n")
+            text = ""
+            text += f"{self.flow_unit}\n"
+            text += f"{number_of_cycles}\n"
+
+            for x in range(0,len(self.syringes[s].flow_profile)):
+                flow_val = self.syringes[s].flow_profile[x]
+                time_step = time_steps_in_ms[x]
+                text += f"{time_step}\t {flow_val}\t{valve_val}\n"
+
+            with open(filename, "w") as file:
+                file.write(text)
 
     def write_conditions_file(self):
         '''
