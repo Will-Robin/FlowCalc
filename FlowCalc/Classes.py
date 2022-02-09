@@ -2,26 +2,49 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.interpolate import interpolate
 
-font  = 15
-
 class Syringe:
     def __init__(self, name, concentration):
         '''
+        An object which stores the information for a Syringe in an experiment.
+
+        Parameters
+        ----------
         name: str
             name for syringe
         concentration: float
             concentration inside syringe
+
+        Attributes
+        ----------
+        self.name: str
+        self.concentration: float
+        self.conc_unit: str
+        self.time: array like
+        self.flow_profile: array like
+        self.interpolation: None or interpolate.interp1d()
         '''
+
         self.name = name
         self.concentration = concentration
         self.conc_unit = "M"
+        self.time = []
+        self.flow_profile = []
+        self.interpolation = None
 
     def add_flow_profile(self, time_vals, flow_profile):
         '''
+        Add a flow profile into the Syringe object.
+
+        Parameters
+        ----------
         time_vals: array
             array of time values for the flow profile.
         flow_profile: array
             flow rate values for the flow profile.
+
+        Returns
+        -------
+        None
         '''
 
         self.time = time_vals
@@ -31,6 +54,10 @@ class Syringe:
 class Flow_Experiment:
     def __init__(self, exp_name, reactor_vol, fl_un, syringe_set = []):
         '''
+        An object to store experimental information.
+
+        Parameters
+        ----------
         exp_name: str
             A name for the experiment.
         reactor_vol: float
@@ -42,7 +69,15 @@ class Flow_Experiment:
             A list of syringes can be added when the
             Syringe_Set object is created, or they can be
             added one by one using the add_syringe method.
+
+        Attributes
+        ----------
+        self.name: str
+        self.reactor_volume: float
+        self.flow_unit: str
+        self.syringes: dict
         '''
+
         self.name = exp_name
         self.reactor_volume = reactor_vol
         self.flow_unit = fl_un
@@ -54,30 +89,42 @@ class Flow_Experiment:
 
     def add_syringe(self,syringe):
         '''
+        Add a Syringe object to the experiment.
+
+        Parameters
+        ----------
         syringe: Syringe object
             Syringe to be added to the set.
+
+        Returns
+        -------
+        None
         '''
+
         self.syringes[syringe.name] = syringe
 
     def write_flow_profile(self, number_of_cycles = 1, valve_val = 255):
         '''
-        A function for creating a flow profile file for Nemesys pumps from an array.
+        A function for creating a flow profile file for Nemesys pumps from an
+        array.
+
+        output file: "filename".nfp
+            a file which can be read by Nemesys Pump software (see manual).
 
         Parameters
         ----------
         number_of_cycles: int
-            0 is an infinite loop, other nunmbers indicate how many times the flow
-            profile is repeated
+            0 is an infinite loop, other nunmbers indicate how many times the
+            flow profile is repeated
 
         valve_val: int
             valve setting for the output flow profile. 255 is default.
 
         Output
         -------
-        file: "filename".nfp
-            a file which can be read by Nemesys Pump software (see manual).
-
+        None
         '''
+
         for s in self.syringes:
 
             filename = "{}_flow_profile.nfp".format(self.syringes[s].name)
@@ -94,6 +141,7 @@ class Flow_Experiment:
     def write_conditions_file(self):
         '''
         Output draft conditions file
+
         Parameters
         ----------
         Exp_name: str
@@ -108,10 +156,9 @@ class Flow_Experiment:
 
         Output
         ------
-
-        A .csv file conditions file summarising the calculated experimental details.
-
+        None
         '''
+
         with open("{}_conditions.csv".format(self.name), "w") as f:
             f.write("Dataset,{}\n".format(self.name))
             f.write("start_experiment_information\n")
@@ -153,6 +200,7 @@ class Flow_Experiment:
     def plot_profiles(self):
         '''
         Output plots
+
         Parameters
         ----------
         time: numpy 1D array
@@ -167,7 +215,7 @@ class Flow_Experiment:
 
         Output
         ------
-        A plot of the flow proflies calculated.
+        None
         '''
         fig, ax = plt.subplots(figsize=(20,20))
 
