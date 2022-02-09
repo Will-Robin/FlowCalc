@@ -215,35 +215,51 @@ class Flow_Experiment:
 
     def plot_profiles(self):
         '''
-        Output plots
+        Output plots of the flow profiles of the Experiment Syringes.
 
         Parameters
         ----------
-        time: numpy 1D array
-            Array of time values for the flow profile
-        flow_profiles: dict
-            Dictionary of flow profiles
-            e.g. NaOH_flow_profile/ uL/h : np.array([1,2,...])
-        Exp_name: str
-            Name for the experiment (used in output file name).
-        flow_unit: str
-            Units for the flow rates calculated
 
         Output
         ------
         None
         '''
+
         fig, ax = plt.subplots(figsize=(20,20))
 
         for f in self.syringes:
-            ax.plot(self.syringes[f].time/60, self.syringes[f].flow_profile, label = f, linewidth = 3)
+            time_axis_in_min = self.syringes[f]/60
+            flow_profile = self.syringes[f].flow_profile
+            ax.plot(
+                    time_axis_in_min, flow_profile,
+                    label = f,
+                    linewidth = 3
+                    )
 
         ax.set_xlabel("time/ minutes", fontsize = font)
-        ax.set_ylabel("flow rate ({}) ".format(self.flow_unit), fontsize = font)
+        ax.set_ylabel(f"flow rate ({self.flow_unit}) ", fontsize = font)
+
         ax.tick_params(labelsize = font, axis = "both")
+
         box = ax.get_position()
-        ax.set_position([box.x0, box.y0 + box.height * 0.3, box.width, box.height * 0.7])
-        ax.legend(loc='lower center', bbox_to_anchor=(0.5, -0.3), fancybox=True, shadow=True, ncol=4, fontsize = font)
+        ax.set_position(
+                        [
+                        box.x0,
+                        box.y0 + box.height * 0.3,
+                        box.width,
+                        box.height * 0.7
+                        ]
+                    )
+
+        ax.legend(
+                loc='lower center',
+                bbox_to_anchor=(0.5, -0.3),
+                fancybox=True,
+                shadow=True,
+                ncol=4,
+                fontsize = font
+            )
+
         plt.savefig("{}_flow_profiles".format(self.name))
         plt.show()
         plt.clf()
