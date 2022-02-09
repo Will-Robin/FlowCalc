@@ -160,58 +160,67 @@ class Flow_Experiment:
 
         Parameters
         ----------
-        Exp_name: str
-            Name for the experiment (used in output file name and information).
-        reactor_vol: float
-            Volume of the flow reactor in uL
-        syringes: dict
-            Dictionary of syringe concentrations e.g. "NaOH0_concentration/ M": 0.12
-        flow_profiles: dict
-            Dictionary of flow profiles
-            e.g. NaOH_flow_profile/ uL/h : np.array([1,2,...])
 
         Output
         ------
         None
         '''
 
-        with open("{}_conditions.csv".format(self.name), "w") as f:
-            f.write("Dataset,{}\n".format(self.name))
-            f.write("start_experiment_information\n")
-            f.write("dilution_factor,#NOT PROVIDED\n")
-            f.write("series_values,#NOT PROVIDED\n")
-            f.write("series_unit,#NOT PROVIDED\n")
-            f.write("series_regions,#NOT PROVIDED\n")
-            f.write("internal_ref_region,#NOT PROVIDED\n")
-            f.write("internal_ref_concentration/ M,#NOT PROVIDED\n")
-            f.write("end_experiment_information\n")
+        # Write text
+        text += f"Dataset,{self.name}\n"
+        text += "start_experiment_information\n"
+        text += "dilution_factor,#NOT PROVIDED\n"
+        text += "series_values,#NOT PROVIDED\n"
+        text += "series_unit,#NOT PROVIDED\n"
+        text += "series_regions,#NOT PROVIDED\n"
+        text += "internal_ref_region,#NOT PROVIDED\n"
+        text += "internal_ref_concentration/ M,#NOT PROVIDED\n"
+        text += "end_experiment_information\n"
 
-            f.write("start_conditions\n")
-            f.write("reactor_volume/ uL,{}\n".format(self.reactor_volume))
+        text += "start_conditions\n"
+        text += f"reactor_volume/ uL,{self.reactor_volume}\n"
 
-            for s in self.syringes:
-                f.write("{}/ {},{}\n".format(self.syringes[s].name, self.syringes[s].conc_unit, self.syringes[s].concentration))
+        for s in self.syringes:
+            syr_name = self.syringes[s].name
+            conc_unit = self.syringes[s].conc_unit
+            concentration = self.syringes[s].concentration
+            text += f"{syr_name}/ {conc_unit},{concentration}\n"
 
-            a_syringe = list(self.syringes)[-1]
-            f.write("flow_profile_time/ s,")
-            [f.write("{},".format(x)) for x in a_syringe.time]
-            f.write("\n")
+        a_syringe = list(self.syringes)[-1]
+        text += "flow_profile_time/ s,"
 
-            tot_flow = np.zeros(len(a_syringe.time))
+        for x in a_syringe.time:
+            text += f"{x},"
 
-            for s in self.syringes:
-                f.write("{}_flow/ {},".format(s, self.flow_unit))
-                [f.write("{},".format(x)) for x in self.syringes[s].flow_profile]
-                f.write("\n")
-                tot_flow = tot_flow + self.syringes[s].flow_profile
+        text += "\n"
 
-            residence_time = 60*60*self.reactor_volume/tot_flow
+        tot_flow = np.zeros(len(a_syringe.time))
 
-            f.write("Residence time/ s,")
-            [f.write("{},".format(r)) for r in residence_time]
-            f.write("\n")
+        for s in self.syringes:
+            text += f"{s}_flow/ {self.flow_unit},"
 
-            f.write("end_conditions\n")
+            for x in self.syringes[s].flow_profile:
+                text += f"{x}"
+            text += "\n"
+
+            tot_flow = tot_flow + self.syringes[s].flow_profile
+
+        # Convert residence time to seconds
+        # TODO: check units and conversions: everything should be SI.
+        residence_time = 60*60*self.reactor_volume/tot_flow
+
+        text += "Residence time/ s,"
+
+        for r in residence_time:
+            text += f"{r}"
+
+        text += "\n"
+
+        text += "end_conditions\n"
+
+        # Write text to file.
+        with open("{}_conditions.csv".format(self.name), "w") as file:
+            file.write(text)
 
     def plot_profiles(self):
         '''
