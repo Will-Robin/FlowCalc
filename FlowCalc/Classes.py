@@ -129,14 +129,24 @@ class Flow_Experiment:
 
             filename = "{}_flow_profile.nfp".format(self.syringes[s].name)
 
-            # Convert timestep to ms
-            out_tstep = int(round(self.syringes[s].time[-1]/ len(self.syringes[s].time),1))*1000
+            # Create a timesteps
+            time_steps_in_seconds = np.diff(self.syringes[s].time)
+            time_steps_in_seconds = np.hstack(
+                                                (
+                                                time_steps_in_seconds[0],
+                                                time_steps_in_seconds
+                                                )
+                                            )
+
+            time_steps_in_ms = np.round(time_steps_in_seconds, 1)*1000
 
             with open(filename, "w") as f:
-                f.write("{}\n".format(self.flow_unit))
-                f.write("{}\n".format(number_of_cycles))
+                f.write(f"{self.flow_unit}\n")
+                f.write(f"{number_of_cycles}\n")
                 for x in range(0,len(self.syringes[s].flow_profile)):
-                    f.write("{}\t {}\t{}\n".format(out_tstep,self.syringes[s].flow_profile[x],valve_val))
+                    flow_val = self.syringes[s].flow_profile[x]
+                    time_step = time_steps_in_ms[x]
+                    f.write(f"{time_step}\t {flow_val}\t{valve_val}\n")
 
     def write_conditions_file(self):
         '''
