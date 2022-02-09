@@ -1,5 +1,5 @@
-import matplotlib.pyplot as plt
 import numpy as np
+import matplotlib.pyplot as plt
 from scipy.interpolate import interpolate
 
 font  = 15
@@ -129,11 +129,12 @@ class Flow_Experiment:
             for s in self.syringes:
                 f.write("{}/ {},{}\n".format(self.syringes[s].name, self.syringes[s].conc_unit, self.syringes[s].concentration))
 
+            a_syringe = list(self.syringes)[-1]
             f.write("flow_profile_time/ s,")
-            [f.write("{},".format(x)) for x in self.syringes[s].time]
+            [f.write("{},".format(x)) for x in a_syringe.time]
             f.write("\n")
 
-            tot_flow = np.zeros(len(self.syringes[s].time))
+            tot_flow = np.zeros(len(a_syringe.time))
 
             for s in self.syringes:
                 f.write("{}_flow/ {},".format(s, self.flow_unit))
@@ -142,8 +143,7 @@ class Flow_Experiment:
                 tot_flow = tot_flow + self.syringes[s].flow_profile
 
             residence_time = 60*60*self.reactor_volume/tot_flow
-            print("tau",residence_time)
-            
+
             f.write("Residence time/ s,")
             [f.write("{},".format(r)) for r in residence_time]
             f.write("\n")
@@ -151,7 +151,6 @@ class Flow_Experiment:
             f.write("end_conditions\n")
 
     def plot_profiles(self):
-        global font
         '''
         Output plots
         Parameters
