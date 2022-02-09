@@ -1,20 +1,6 @@
-import numpy as np
 import os
-
-def change_dir(name):
-    '''
-    Uses os to change directory. If the folder exists,
-    the directory given in the argument exists, it becomes
-    the working directory. Otherwise, it is created, then
-    becomes the working directory.
-
-    Parameters
-    ----------
-    name: str
-        path to folder.
-    '''
-    os.makedirs(name, exist_ok = True)
-    os.chdir(name)
+import numpy as np
+from conversions import SI_conversions
 
 def extend_flow_profile(flow_profile,extension):
     '''
@@ -83,11 +69,6 @@ def SI_convert(header_name, value):
 
 
     '''
-
-    SI_conversions = {"h":(60, "s"),
-                     "degrees": (np.pi/180, "rad"),
-                     "uL/h":((10e-6)/(60*60), "L/s"),
-                     "uM": (10e-6, "M")}
 
     cut_out = header_name[header_name.find("(")+1:header_name.find(")")]
 
