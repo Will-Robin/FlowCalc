@@ -1,4 +1,5 @@
 import os
+import re
 import numpy as np
 from conversions import SI_conversions
 
@@ -24,7 +25,6 @@ def sine_params_from_limits(high,low):
 
     Parameters
     ----------
-
     high: float
         High flow rate limit (any unit, think of output).
 
@@ -33,7 +33,6 @@ def sine_params_from_limits(high,low):
 
     Returns
     -------
-
     amplitude: float
         Amplitude of the sine wave. Same units as parameters.
 
@@ -49,15 +48,19 @@ def sine_params_from_limits(high,low):
 
 def SI_convert(header_name, value):
     '''
-    Convert a named parameter to its SI equivalent (if given in SI_conversions,
-    otherwise left unchanged, see below).
+    Convert a named parameter to its SI equivalent using a find and replace
+    strategy. If the given unit is not in SI_conversions, it is left unchanged.
 
     Parameters
     -----------
     header_name: str
-        Expected format: name (unit) e.g. Concentration (uM)
+        Expected formats:
+            name (unit) e.g. Concentration (μM)
+            name/ unit e.g. concentration/ mM
+            name [unit] e.g. concentration/ mM
     value: str, int or float
-        Value of the parameter
+        Value of the parameter. It must be possible to convert this value to a
+        float if it is not already a float.
 
     Returns
     -------
@@ -66,17 +69,38 @@ def SI_convert(header_name, value):
             Parameter name with SI or unchanged units.
         value: float
             Value of parameter in SI or unchanged units
-
-
     '''
 
-    cut_out = header_name[header_name.find("(")+1:header_name.find(")")]
+    paren_units_regex = f"(?:.*)\((.*)\)"
+    sq_brakets_units_regex = f"(?:.*)\[(.*)\]"
+    quantity_calculus_units_regex = f"(?:.*\/\s?)(.*)"
 
-    if cut_out in SI_conversions.keys():
-        return header_name.replace(cut_out, SI_conversions[cut_out][1]), float(value)*SI_conversions[cut_out][0]
+    expressions = [
+                    paren_units_regex,
+                    sq_brakets_units_regex,
+                    quantity_calculus_units_regex
+                    ]
+
+    unit = '<unit not found!>'
+    for expr in expressions:
+        matches = re.match(expr, header_name)
+        if matches != None:
+            unit = matches.group(1)
+
+    if unit in SI_conversions.keys():
+        converted_unit = SI_conversions[unit][1]
+        conversion = SI_conversions[unit][0]
+
+        converted_value = conversion(float(value))
+
+        new_header_name = header_name.replace(unit, converted_unit)
+
+        return new_header_name, converted_value
+
     else:
-        print("No SI conversion given for {}".format(cut_out))
-        return header_name,float(value)
+        print("No SI conversion given for <<{}>>".format(unit))
+
+        return header_name, float(value)
 
 def parameters_from_config_file(fname, SI_units = False):
     '''
