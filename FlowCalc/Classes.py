@@ -28,8 +28,10 @@ class Syringe:
         self.concentration = concentration
         self.conc_unit = "M"
         self.time = []
+        self.time_unit = "s"
         self.flow_profile = []
         self.interpolation = None
+        self.timesteps = []
 
     def add_flow_profile(self, time_vals, flow_profile):
         '''
@@ -50,6 +52,18 @@ class Syringe:
         self.time = time_vals
         self.flow_profile = flow_profile
         self.interpolation = interpolate.interp1d(time_vals,flow_profile, kind = "linear")
+
+    def calculate_timesteps(self):
+        '''
+        Calculate the timesteps between the values in self.time
+        '''
+
+        time_steps = np.diff(self.time)
+
+        # The last flow step will be held for as long as the one preceding it
+        time_steps = np.hstack((time_steps, time_steps[-1]))
+
+        self.timesteps = time_steps
 
 class Flow_Experiment:
     def __init__(self, exp_name, reactor_vol, fl_un, syringe_set = []):
@@ -129,19 +143,13 @@ class Flow_Experiment:
 
             filename = "{}_flow_profile.nfp".format(self.syringes[s].name)
 
-            # Create a timesteps
-            time_steps_in_seconds = np.diff(self.syringes[s].time)
+            self.syringes[s].calculate_timesteps
 
-            # The last flow step will be held for as long as the one before it
-            time_steps_in_seconds = np.hstack(
-                                                (
-                                                time_steps_in_seconds,
-                                                time_steps_in_seconds[-1],
-                                                )
-                                            )
+            syr_time_steps = self.syringes[s].timesteps
 
-            time_steps_in_ms = np.round(time_steps_in_seconds, 1)*1000
+            time_steps_in_ms = np.round(syr_time_steps, 1)*1000
 
+            # Build output text
             text = ""
             text += f"{self.flow_unit}\n"
             text += f"{number_of_cycles}\n"
