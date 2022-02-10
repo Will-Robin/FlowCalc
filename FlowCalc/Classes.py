@@ -1,6 +1,9 @@
+import sys
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.interpolate import interpolate
+
+from FlowCalc.conversions import SI_conversions
 
 class Syringe:
     def __init__(self, name, concentration):
@@ -143,11 +146,24 @@ class Flow_Experiment:
 
             filename = "{}_flow_profile.nfp".format(self.syringes[s].name)
 
+            # Get timesteps for the syringe.
             self.syringes[s].calculate_timesteps
 
             syr_time_steps = self.syringes[s].timesteps
 
-            time_steps_in_ms = np.round(syr_time_steps, 1)*1000
+            time_unit = self.syringes[s].time_unit
+
+            if time_unit in SI_conversions:
+                conversion_to_s = SI_conversions[time_unit][0]
+                time_steps_in_s = conversion_to_s(syr_time_steps)
+            else:
+                syr_name = self.syringes[s].name
+                sys.exit(f'''Syringe {syr_name}: Please provide the units for
+                        the flow profile time axis, or check if there is a
+                        conversion available in Flowcalc.conversions''')
+
+            # Convert time steps to ms
+            time_steps_in_ms = np.round(time_steps_in_s, 1)*1000
 
             # Build output text
             text = ""

@@ -1,7 +1,7 @@
 import os
 import re
 import numpy as np
-from conversions import SI_conversions
+from FlowCalc.conversions import SI_conversions
 
 def extend_flow_profile(flow_profile,extension):
     '''
