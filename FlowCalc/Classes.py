@@ -6,7 +6,7 @@ from scipy.interpolate import interpolate
 from FlowCalc.conversions import SI_conversions
 
 class Syringe:
-    def __init__(self, name, concentration):
+    def __init__(self, name):
         '''
         An object which stores the information for a Syringe in an experiment.
 
@@ -14,8 +14,6 @@ class Syringe:
         ----------
         name: str
             name for syringe
-        concentration: float
-            concentration inside syringe
 
         Attributes
         ----------
@@ -28,13 +26,21 @@ class Syringe:
         '''
 
         self.name = name
-        self.concentration = concentration
+        self.concentration = 0.0
         self.conc_unit = "M"
         self.time = []
         self.time_unit = "s"
         self.flow_profile = []
         self.interpolation = None
         self.timesteps = []
+
+    def set_concentration(self, value, unit):
+        '''
+        Set the concentration of the syringe.
+        '''
+
+        self.concentration = value
+        self.conc_unit = unit
 
     def add_flow_profile(self, time_vals, flow_profile):
         '''
