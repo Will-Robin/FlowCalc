@@ -96,7 +96,7 @@ class Syringe:
         self.timesteps = time_steps
 
 class Flow_Experiment:
-    def __init__(self, exp_name, reactor_vol, fl_un, syringe_set = []):
+    def __init__(self, exp_name, syringe_set = []):
         '''
         An object to store experimental information.
 
@@ -104,27 +104,16 @@ class Flow_Experiment:
         ----------
         exp_name: str
             A name for the experiment.
-        reactor_vol: float
-            Volume of the reactor in uL.
-        fl_un: str
-            Units for the flow profiles.
-        syringe_set: list of Syringe objects.
-            Syringes of which the Syringe_Set consists.
-            A list of syringes can be added when the
-            Syringe_Set object is created, or they can be
-            added one by one using the add_syringe method.
 
         Attributes
         ----------
         self.name: str
         self.reactor_volume: float
-        self.flow_unit: str
         self.syringes: dict
         '''
 
         self.name = exp_name
-        self.reactor_volume = reactor_vol
-        self.flow_unit = fl_un
+        self.reactor_volume = 0.0
 
         if len(syringe_set) == 0:
             self.syringes = {}
