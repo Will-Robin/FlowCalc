@@ -18,31 +18,46 @@ class Syringe:
         Attributes
         ----------
         self.name: str
+
         self.concentration: float
         self.conc_unit: str
+
         self.time: array like
+        self.time_steps: array like
+        self.time_unit: str
+
         self.flow_profile: array like
-        self.interpolation: None or interpolate.interp1d()
+        self.flow_unit: str
         '''
 
         self.name = name
+
         self.concentration = 0.0
-        self.conc_unit = "M"
+        self.conc_unit = ""
+
         self.time = []
-        self.time_unit = "s"
-        self.flow_profile = []
-        self.interpolation = None
         self.timesteps = []
+        self.time_unit = ""
+
+        self.flow_profile = []
+        self.flow_unit = ""
 
     def set_concentration(self, value, unit):
         '''
         Set the concentration of the syringe.
+
+        Parameters
+        ----------
+        value: float
+            Concentration value.
+        unit: str
+            Concetration unit.
         '''
 
         self.concentration = value
         self.conc_unit = unit
 
-    def add_flow_profile(self, time_vals, flow_profile):
+    def set_flow_profile(self, time_vals, flow_profile, time_unit, flow_unit):
         '''
         Add a flow profile into the Syringe object.
 
@@ -52,6 +67,10 @@ class Syringe:
             array of time values for the flow profile.
         flow_profile: array
             flow rate values for the flow profile.
+        time_unit: str
+            time axis unit.
+        flow_unit: str
+            Flow rate unit.
 
         Returns
         -------
@@ -59,8 +78,10 @@ class Syringe:
         '''
 
         self.time = time_vals
+        self.time_unit = time_unit
+
         self.flow_profile = flow_profile
-        self.interpolation = interpolate.interp1d(time_vals,flow_profile, kind = "linear")
+        self.flow_unit = time_unit
 
     def calculate_timesteps(self):
         '''
