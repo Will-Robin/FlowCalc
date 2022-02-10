@@ -35,4 +35,6 @@ experiment.add_syringe(syringe)
 
 # Write flow profiles to files
 experiment.write_flow_profile()
-experiment.write_conditions_file()
+
+conditions_filename = f"ExampleOutput/{experiment.name}_conditions.csv"
+experiment.write_conditions_file(conditions_filename)
