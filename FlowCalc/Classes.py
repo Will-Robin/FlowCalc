@@ -1,7 +1,5 @@
 import sys
 import numpy as np
-import matplotlib.pyplot as plt
-from scipy.interpolate import interpolate
 
 from FlowCalc.conversions import SI_conversions
 
