@@ -196,12 +196,14 @@ class FlowExperiment:
             with open(filename, "w") as file:
                 file.write(text)
 
-    def write_conditions_file(self):
+    def write_conditions_file(self, filename):
         '''
         Output draft conditions file
 
         Parameters
         ----------
+        filename: str
+            Name for the output file.
 
         Output
         ------
@@ -261,5 +263,5 @@ class FlowExperiment:
         text += "end_conditions\n"
 
         # Write text to file.
-        with open("{}_conditions.csv".format(self.name), "w") as file:
+        with open(filename, "w") as file:
             file.write(text)
