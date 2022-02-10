@@ -95,7 +95,7 @@ class Syringe:
 
         self.timesteps = time_steps
 
-class Flow_Experiment:
+class FlowExperiment:
     def __init__(self, exp_name, syringe_set = []):
         '''
         An object to store experimental information.
@@ -114,6 +114,7 @@ class Flow_Experiment:
 
         self.name = exp_name
         self.reactor_volume = 0.0
+        self.reactor_volume_unit = ""
 
         if len(syringe_set) == 0:
             self.syringes = {}
@@ -262,4 +263,3 @@ class Flow_Experiment:
         # Write text to file.
         with open("{}_conditions.csv".format(self.name), "w") as file:
             file.write(text)
-
