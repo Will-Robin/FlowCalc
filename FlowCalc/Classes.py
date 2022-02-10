@@ -137,7 +137,7 @@ class FlowExperiment:
 
         self.syringes[syringe.name] = syringe
 
-    def write_flow_profile(self, number_of_cycles = 1, valve_val = 255):
+    def write_flow_profile(self, path, number_of_cycles = 1, valve_val = 255):
         '''
         A function for creating a flow profile file for Nemesys pumps from an
         array.
@@ -147,6 +147,9 @@ class FlowExperiment:
 
         Parameters
         ----------
+        path: str
+            Relative or absolute path to an existing directory to store the
+            output.
         number_of_cycles: int
             0 is an infinite loop, other nunmbers indicate how many times the
             flow profile is repeated
@@ -154,14 +157,14 @@ class FlowExperiment:
         valve_val: int
             valve setting for the output flow profile. 255 is default.
 
-        Output
+        Returns
         -------
         None
         '''
 
         for s in self.syringes:
 
-            filename = "{}_flow_profile.nfp".format(self.syringes[s].name)
+            filename = f"{path}/{self.syringes[s].name}_flow_profile.nfp"
 
             # Get timesteps for the syringe.
             self.syringes[s].calculate_timesteps
@@ -222,7 +225,9 @@ class FlowExperiment:
         text += "end_experiment_information\n"
 
         text += "start_conditions\n"
-        text += f"reactor_volume/ uL,{self.reactor_volume}\n"
+        vol = self.reactor_volume
+        vol_unit = self.reactor_volume_unit
+        text += f"reactor_volume/ {vol_unit},{vol}\n"
 
         for s in self.syringes:
             syr_name = self.syringes[s].name
@@ -233,8 +238,13 @@ class FlowExperiment:
         a_syringe = list(self.syringes)[-1]
         text += "flow_profile_time/ s,"
 
+        # The following writes a shared time axis for all of the flow profiles.
+        # Thus, it is assumed that all of the flow profiles share the same time
+        # axis.
+        time_conversion_func = SI_conversions[a_syringe.time_unit][0]
         for x in a_syringe.time:
-            text += f"{x},"
+            si_time = time_conversion_func(x)
+            text += f"{si_time},"
 
         text += "\n"
 
@@ -243,15 +253,20 @@ class FlowExperiment:
         for s in self.syringes:
             text += f"{s}_flow/ {self.flow_unit},"
 
+            flow_conversion_func = SI_conversions[self.syringes[s].flow_unit][0]
+
             for x in self.syringes[s].flow_profile:
-                text += f"{x}"
+                si_time = time_conversion_func(x)
+                text += f"{si_time}"
+
             text += "\n"
 
-            tot_flow = tot_flow + self.syringes[s].flow_profile
+            tot_flow = tot_flow + time_conversion_func(self.syringes[s].flow_profile)
 
         # Convert residence time to seconds
-        # TODO: check units and conversions: everything should be SI.
-        residence_time = 60*60*self.reactor_volume/tot_flow
+        reactor_conversion = SI_conversions[self.reactor_unit][0]
+        reactor_vol_unit = SI_conversions[self.reactor_volume][1]
+        residence_time = reactor_conversion(self.reactor_volume)/tot_flow
 
         text += "Residence time/ s,"
 
@@ -265,3 +280,4 @@ class FlowExperiment:
         # Write text to file.
         with open(filename, "w") as file:
             file.write(text)
+

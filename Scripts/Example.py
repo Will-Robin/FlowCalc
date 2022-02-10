@@ -34,7 +34,7 @@ syringe.set_flow_profile(time_axis, time_unit, flow_rates, flow_units)
 experiment.add_syringe(syringe)
 
 # Write flow profiles to files
-experiment.write_flow_profile()
+experiment.write_flow_profile('ExampleOutput')
 
 conditions_filename = f"ExampleOutput/{experiment.name}_conditions.csv"
 experiment.write_conditions_file(conditions_filename)
