@@ -57,7 +57,7 @@ class Syringe:
         self.concentration = value
         self.conc_unit = unit
 
-    def set_flow_profile(self, time_vals, flow_profile, time_unit, flow_unit):
+    def set_flow_profile(self, time_vals, time_unit, flow_profile, flow_unit):
         '''
         Add a flow profile into the Syringe object.
 
