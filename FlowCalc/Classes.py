@@ -202,6 +202,7 @@ class Flow_Experiment:
                 time_step = time_steps_in_ms[x]
                 text += f"{time_step}\t {flow_val}\t{valve_val}\n"
 
+            # Write to file
             with open(filename, "w") as file:
                 file.write(text)
 
@@ -273,53 +274,3 @@ class Flow_Experiment:
         with open("{}_conditions.csv".format(self.name), "w") as file:
             file.write(text)
 
-    def plot_profiles(self):
-        '''
-        Output plots of the flow profiles of the Experiment Syringes.
-
-        Parameters
-        ----------
-
-        Output
-        ------
-        None
-        '''
-
-        fig, ax = plt.subplots(figsize=(20,20))
-
-        for f in self.syringes:
-            time_axis_in_min = self.syringes[f]/60
-            flow_profile = self.syringes[f].flow_profile
-            ax.plot(
-                    time_axis_in_min, flow_profile,
-                    label = f,
-                    linewidth = 3
-                    )
-
-        ax.set_xlabel("time/ minutes", fontsize = font)
-        ax.set_ylabel(f"flow rate ({self.flow_unit}) ", fontsize = font)
-
-        ax.tick_params(labelsize = font, axis = "both")
-
-        box = ax.get_position()
-        ax.set_position(
-                        [
-                        box.x0,
-                        box.y0 + box.height * 0.3,
-                        box.width,
-                        box.height * 0.7
-                        ]
-                    )
-
-        ax.legend(
-                loc='lower center',
-                bbox_to_anchor=(0.5, -0.3),
-                fancybox=True,
-                shadow=True,
-                ncol=4,
-                fontsize = font
-            )
-
-        plt.savefig("{}_flow_profiles".format(self.name))
-        plt.show()
-        plt.clf()
