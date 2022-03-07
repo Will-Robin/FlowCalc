@@ -167,7 +167,7 @@ class FlowExperiment:
             filename = f"{path}/{self.syringes[s].name}_flow_profile.nfp"
 
             # Get timesteps for the syringe.
-            self.syringes[s].calculate_timesteps
+            self.syringes[s].calculate_timesteps()
 
             syr_time_steps = self.syringes[s].timesteps
 
@@ -237,7 +237,7 @@ class FlowExperiment:
             concentration = self.syringes[s].concentration
             text += f"{syr_name}/ {conc_unit},{concentration}\n"
 
-        a_syringe = list(self.syringes)[-1]
+        a_syringe = self.syringes[list(self.syringes)[-1]]
         text += "flow_profile_time/ s,"
 
         # The following writes a shared time axis for all of the flow profiles.
@@ -253,7 +253,8 @@ class FlowExperiment:
         tot_flow = np.zeros(len(a_syringe.time))
 
         for s in self.syringes:
-            text += f"{s}_flow/ {self.syringes[s].flow_unit},"
+            flow_unit_si = SI_conversions[self.syringes[s].flow_unit][1]
+            text += f"{s}_flow/ {flow_unit_si},"
 
             flow_conversion_func = SI_conversions[self.syringes[s].flow_unit][0]
 
@@ -272,7 +273,7 @@ class FlowExperiment:
         text += "Residence time/ s,"
 
         for r in residence_time:
-            text += f"{r}"
+            text += f"{r},"
 
         text += "\n"
 
