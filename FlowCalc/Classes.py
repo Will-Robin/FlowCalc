@@ -3,9 +3,10 @@ import numpy as np
 
 from FlowCalc.conversions import SI_conversions
 
+
 class Syringe:
     def __init__(self, name):
-        '''
+        """
         An object which stores the information for a Syringe in an experiment.
 
         Parameters
@@ -26,7 +27,7 @@ class Syringe:
 
         self.flow_profile: array like
         self.flow_unit: str
-        '''
+        """
 
         self.name = name
 
@@ -41,7 +42,7 @@ class Syringe:
         self.flow_unit = ""
 
     def set_concentration(self, value, unit):
-        '''
+        """
         Set the concentration of the syringe.
 
         Parameters
@@ -50,13 +51,13 @@ class Syringe:
             Concentration value.
         unit: str
             Concetration unit.
-        '''
+        """
 
         self.concentration = value
         self.conc_unit = unit
 
     def set_flow_profile(self, time_vals, time_unit, flow_profile, flow_unit):
-        '''
+        """
         Add a flow profile into the Syringe object.
 
         Parameters
@@ -73,7 +74,7 @@ class Syringe:
         Returns
         -------
         None
-        '''
+        """
 
         self.time = time_vals
         self.time_unit = time_unit
@@ -82,9 +83,9 @@ class Syringe:
         self.flow_unit = time_unit
 
     def calculate_timesteps(self):
-        '''
+        """
         Calculate the timesteps between the values in self.time
-        '''
+        """
 
         time_steps = np.diff(self.time)
 
@@ -93,9 +94,10 @@ class Syringe:
 
         self.timesteps = time_steps
 
+
 class FlowExperiment:
-    def __init__(self, exp_name, syringe_set = []):
-        '''
+    def __init__(self, exp_name, syringe_set=[]):
+        """
         An object to store experimental information.
 
         Parameters
@@ -108,7 +110,7 @@ class FlowExperiment:
         self.name: str
         self.reactor_volume: float
         self.syringes: dict
-        '''
+        """
 
         self.name = exp_name
         self.reactor_volume = 0.0
@@ -117,10 +119,10 @@ class FlowExperiment:
         if len(syringe_set) == 0:
             self.syringes = {}
         else:
-            self.syringes = {s.name:s for s in syringe_set}
+            self.syringes = {s.name: s for s in syringe_set}
 
-    def add_syringe(self,syringe):
-        '''
+    def add_syringe(self, syringe):
+        """
         Add a Syringe object to the experiment.
 
         Parameters
@@ -131,12 +133,12 @@ class FlowExperiment:
         Returns
         -------
         None
-        '''
+        """
 
         self.syringes[syringe.name] = syringe
 
-    def write_flow_profile(self, path, number_of_cycles = 1, valve_val = 255):
-        '''
+    def write_flow_profile(self, path, number_of_cycles=1, valve_val=255):
+        """
         A function for creating a flow profile file for Nemesys pumps from an
         array.
 
@@ -158,7 +160,7 @@ class FlowExperiment:
         Returns
         -------
         None
-        '''
+        """
 
         for s in self.syringes:
 
@@ -176,19 +178,21 @@ class FlowExperiment:
                 time_steps_in_s = conversion_to_s(syr_time_steps)
             else:
                 syr_name = self.syringes[s].name
-                sys.exit(f'''Syringe {syr_name}: Please provide the units for
+                sys.exit(
+                    f"""Syringe {syr_name}: Please provide the units for
                         the flow profile time axis, or check if there is a
-                        conversion available in Flowcalc.conversions''')
+                        conversion available in Flowcalc.conversions"""
+                )
 
             # Convert time steps to ms
-            time_steps_in_ms = np.round(time_steps_in_s, 1)*1000
+            time_steps_in_ms = np.round(time_steps_in_s, 1) * 1000
 
             # Build output text
             text = ""
             text += f"{self.flow_unit}\n"
             text += f"{number_of_cycles}\n"
 
-            for x in range(0,len(self.syringes[s].flow_profile)):
+            for x in range(0, len(self.syringes[s].flow_profile)):
                 flow_val = self.syringes[s].flow_profile[x]
                 time_step = time_steps_in_ms[x]
                 text += f"{time_step}\t {flow_val}\t{valve_val}\n"
@@ -198,7 +202,7 @@ class FlowExperiment:
                 file.write(text)
 
     def write_conditions_file(self, filename):
-        '''
+        """
         Output draft conditions file
 
         Parameters
@@ -209,7 +213,7 @@ class FlowExperiment:
         Output
         ------
         None
-        '''
+        """
 
         # Write text
         text += f"Dataset,{self.name}\n"
@@ -264,7 +268,7 @@ class FlowExperiment:
         # Convert residence time to seconds
         reactor_conversion = SI_conversions[self.reactor_unit][0]
         reactor_vol_unit = SI_conversions[self.reactor_volume][1]
-        residence_time = reactor_conversion(self.reactor_volume)/tot_flow
+        residence_time = reactor_conversion(self.reactor_volume) / tot_flow
 
         text += "Residence time/ s,"
 
@@ -278,4 +282,3 @@ class FlowExperiment:
         # Write text to file.
         with open(filename, "w") as file:
             file.write(text)
-

@@ -3,8 +3,9 @@ import re
 import numpy as np
 from FlowCalc.conversions import SI_conversions
 
-def extend_flow_profile(flow_profile,extension):
-    '''
+
+def extend_flow_profile(flow_profile, extension):
+    """
     Parameters
     ----------
     flow_profile: array
@@ -15,11 +16,12 @@ def extend_flow_profile(flow_profile,extension):
     Returns
     -------
     Wrapper for numpy.hstack() function.
-    '''
+    """
     return np.hstack((flow_profile, extension))
 
-def sine_params_from_limits(high,low):
-    '''
+
+def sine_params_from_limits(high, low):
+    """
     To determine the ampliutde and offet for a sine wave given high and low
     flow rates
 
@@ -38,16 +40,17 @@ def sine_params_from_limits(high,low):
 
     offset: float
         Offet of the sine wave. Same units as parameters.
-    '''
+    """
 
-    offset = (high+low)/2
+    offset = (high + low) / 2
 
-    amplitude = ((high+low)/2)-low
+    amplitude = ((high + low) / 2) - low
 
     return amplitude, offset
 
+
 def SI_convert(header_name, value):
-    '''
+    """
     Convert a named parameter to its SI equivalent using a find and replace
     strategy. If the given unit is not in SI_conversions, it is left unchanged.
 
@@ -69,19 +72,19 @@ def SI_convert(header_name, value):
             Parameter name with SI or unchanged units.
         value: float
             Value of parameter in SI or unchanged units
-    '''
+    """
 
     paren_units_regex = f"(?:.*)\((.*)\)"
     sq_brakets_units_regex = f"(?:.*)\[(.*)\]"
     quantity_calculus_units_regex = f"(?:.*\/\s?)(.*)"
 
     expressions = [
-                    paren_units_regex,
-                    sq_brakets_units_regex,
-                    quantity_calculus_units_regex
-                    ]
+        paren_units_regex,
+        sq_brakets_units_regex,
+        quantity_calculus_units_regex,
+    ]
 
-    unit = '<unit not found!>'
+    unit = "<unit not found!>"
     for expr in expressions:
         matches = re.match(expr, header_name)
         if matches != None:
@@ -102,8 +105,9 @@ def SI_convert(header_name, value):
 
         return header_name, float(value)
 
-def parameters_from_config_file(fname, SI_units = False):
-    '''
+
+def parameters_from_config_file(fname, SI_units=False):
+    """
     Get experiment configuration from a standard format .csv file.
 
     Parameters
@@ -120,7 +124,7 @@ def parameters_from_config_file(fname, SI_units = False):
         Experiment name as given in file.
     params:
         Dictionary of dictionaries for parameters. {Section: {param: value}}
-    '''
+    """
 
     lineproc = lambda x: x.strip("\n").split(",")
     params = {}
@@ -140,8 +144,16 @@ def parameters_from_config_file(fname, SI_units = False):
             if readstate:
                 ins = lineproc(line)
                 if SI_units:
-                    params[clef][ins[0]] = {k:v for k,v in (helper_functions.SI_convert(x,y) for x,y in zip(section_header, ins[1:]))}
+                    params[clef][ins[0]] = {
+                        k: v
+                        for k, v in (
+                            helper_functions.SI_convert(x, y)
+                            for x, y in zip(section_header, ins[1:])
+                        )
+                    }
                 else:
-                    params[clef][ins[0]] = {k:float(v) for k,v in zip(section_header, ins[1:])}
+                    params[clef][ins[0]] = {
+                        k: float(v) for k, v in zip(section_header, ins[1:])
+                    }
 
     return name, params

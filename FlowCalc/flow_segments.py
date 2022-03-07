@@ -1,8 +1,9 @@
 import numpy as np
 from FlowCalc import flow_segments as FlS
 
+
 def time_segment(start, end, step):
-    '''
+    """
     Creates a time segment.
 
     Parameters
@@ -17,12 +18,13 @@ def time_segment(start, end, step):
     Returns
     -------
     Wrapper for numpy.arange() function
-    '''
+    """
 
     return np.arange(start, end, step)
 
+
 def unmod_flow(time, value):
-    '''
+    """
     Parameters
     ----------
     time: array
@@ -33,11 +35,12 @@ def unmod_flow(time, value):
     Returns
     -------
     Wrapper for numpy.full function.
-    '''
+    """
     return np.full(len(time), value)
 
+
 def sine_wave_flow(period, amplitude, phase, offset, time):
-    '''
+    """
     For generating a sine wave flow profile.
 
     Parameters
@@ -58,14 +61,15 @@ def sine_wave_flow(period, amplitude, phase, offset, time):
     -------
     wave: 1Darray
         An array of flow rate values.
-    '''
+    """
 
-    wave = amplitude*np.sin(2*np.pi*time/period + phase) + offset
+    wave = amplitude * np.sin(2 * np.pi * time / period + phase) + offset
 
     return wave
 
+
 def _1gaussian(x, amp1, cen1, sigma1):
-    '''
+    """
     A single gaussian function
     Parameters
     ----------
@@ -81,11 +85,16 @@ def _1gaussian(x, amp1, cen1, sigma1):
     -------
     function: numpy array
         y values for the function
-    '''
-    return amp1*(1/(sigma1*(np.sqrt(2*np.pi))))*(np.exp(-((x-cen1)**2)/((2*sigma1)**2)))
+    """
+    return (
+        amp1
+        * (1 / (sigma1 * (np.sqrt(2 * np.pi))))
+        * (np.exp(-((x - cen1) ** 2) / ((2 * sigma1) ** 2)))
+    )
 
-def generate_wave_packet(time, amp, period, center, sigma, offset, phase = 0):
-    '''
+
+def generate_wave_packet(time, amp, period, center, sigma, offset, phase=0):
+    """
     Generate a wave-packet style flow profile.
 
     Parameters
@@ -101,7 +110,7 @@ def generate_wave_packet(time, amp, period, center, sigma, offset, phase = 0):
     Returns
     -------
     WP: array
-    '''
+    """
     gauss_component = FlS._1gaussian(time, amp, center, sigma)
     WP = FlS.sine_wave_flow(period, gauss_component, phase, offset, time)
     return WP
