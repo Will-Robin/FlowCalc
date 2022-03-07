@@ -50,7 +50,7 @@ class Syringe:
         value: float
             Concentration value.
         unit: str
-            Concetration unit.
+            Concentration unit.
         """
 
         self.concentration = value
@@ -80,7 +80,7 @@ class Syringe:
         self.time_unit = time_unit
 
         self.flow_profile = flow_profile
-        self.flow_unit = time_unit
+        self.flow_unit = flow_unit
 
     def calculate_timesteps(self):
         """
@@ -189,7 +189,7 @@ class FlowExperiment:
 
             # Build output text
             text = ""
-            text += f"{self.flow_unit}\n"
+            text += f"{self.syringes[s].flow_unit}\n"
             text += f"{number_of_cycles}\n"
 
             for x in range(0, len(self.syringes[s].flow_profile)):
@@ -216,7 +216,7 @@ class FlowExperiment:
         """
 
         # Write text
-        text += f"Dataset,{self.name}\n"
+        text = f"Dataset,{self.name}\n"
         text += "start_experiment_information\n"
         text += "dilution_factor,#NOT PROVIDED\n"
         text += "series_values,#NOT PROVIDED\n"
@@ -253,21 +253,20 @@ class FlowExperiment:
         tot_flow = np.zeros(len(a_syringe.time))
 
         for s in self.syringes:
-            text += f"{s}_flow/ {self.flow_unit},"
+            text += f"{s}_flow/ {self.syringes[s].flow_unit},"
 
             flow_conversion_func = SI_conversions[self.syringes[s].flow_unit][0]
 
             for x in self.syringes[s].flow_profile:
-                si_time = time_conversion_func(x)
-                text += f"{si_time}"
+                si_flow = flow_conversion_func(x)
+                text += f"{si_flow},"
 
             text += "\n"
 
-            tot_flow = tot_flow + time_conversion_func(self.syringes[s].flow_profile)
+            tot_flow = tot_flow + flow_conversion_func(self.syringes[s].flow_profile)
 
         # Convert residence time to seconds
-        reactor_conversion = SI_conversions[self.reactor_unit][0]
-        reactor_vol_unit = SI_conversions[self.reactor_volume][1]
+        reactor_conversion = SI_conversions[self.reactor_volume_unit][0]
         residence_time = reactor_conversion(self.reactor_volume) / tot_flow
 
         text += "Residence time/ s,"
