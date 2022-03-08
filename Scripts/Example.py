@@ -38,3 +38,5 @@ experiment.write_flow_profile('ExampleOutput')
 
 conditions_filename = f"ExampleOutput/{experiment.name}_conditions.csv"
 experiment.write_conditions_file(conditions_filename)
+experiment.write_toml("test.toml")
+
