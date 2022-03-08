@@ -15,7 +15,7 @@ def flow_experiment_from_file(filename):
     experiment: Classes.FlowExperiment
     """
 
-    with open(filename, "r",encoding="utf-8") as file:
+    with open(filename, "r", encoding="utf-8") as file:
         text = file.read()
 
     lines = text.split("\n")
