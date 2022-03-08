@@ -1,5 +1,6 @@
 import sys
 import numpy as np
+import tomli_w
 
 from FlowCalc.conversions import SI_conversions
 
@@ -218,13 +219,7 @@ class FlowExperiment:
         # Write text
         text = f"Dataset,{self.name}\n"
         text += "start_experiment_information\n"
-        text += "dilution_factor,#NOT PROVIDED\n"
         text += "series_values,#NOT PROVIDED\n"
-        text += "series_unit,#NOT PROVIDED\n"
-        text += "series_regions,#NOT PROVIDED\n"
-        text += "internal_ref_region,#NOT PROVIDED\n"
-        text += "internal_ref_concentration/ M,#NOT PROVIDED\n"
-        text += "end_experiment_information\n"
 
         text += "start_conditions\n"
         vol = self.reactor_volume
@@ -282,3 +277,74 @@ class FlowExperiment:
         # Write text to file.
         with open(filename, "w") as file:
             file.write(text)
+
+    def write_toml(self, filename):
+
+        conditions_dict = self.write_to_dict()
+
+        toml_string = tomli_w.dumps(conditions_dict)
+
+        print(toml_string)
+
+        with open(filename, "w") as file:
+            file.write(toml_string)
+
+    def write_to_dict(self):
+        """
+        conditions_dict: dict
+        """
+
+        conditions_dict = {}
+
+        # Write text
+        conditions_dict["Dataset"] = self.name
+        conditions_dict["Series_values"] = []
+        conditions_dict["Series_unit"] = ""
+
+        conditions_dict["conditions"] = {}
+
+        conditions_dict["conditions"]["Reactor_volume"] = [
+            self.reactor_volume,
+            self.reactor_volume_unit,
+        ]
+
+        for s in self.syringes:
+            syr_name = self.syringes[s].name
+            conc_unit = self.syringes[s].conc_unit
+            concentration = self.syringes[s].concentration
+            conditions_dict["conditions"][syr_name] = [concentration, conc_unit]
+
+        # The following writes a shared time axis for all of the flow profiles.
+        # Thus, it is assumed that all of the flow profiles share the same time
+        # axis.
+        a_syringe = self.syringes[list(self.syringes)[-1]]
+
+        time_conversion = SI_conversions[a_syringe.time_unit]
+        time = time_conversion[0](a_syringe.time).tolist()
+
+        conditions_dict["conditions"]["flow_profile_time"] = [time, time_conversion[1]]
+
+        tot_flow = np.zeros(len(a_syringe.time))
+
+        for s in self.syringes:
+
+            flow_conversion = SI_conversions[self.syringes[s].flow_unit]
+
+            flow_si = flow_conversion[0](self.syringes[s].flow_profile).tolist()
+            flow_unit = flow_conversion[1]
+
+            conditions_dict["conditions"]["flow_profile_time"] = [flow_si, flow_unit]
+
+            tot_flow = tot_flow + flow_si
+
+        # Convert residence time to seconds
+        reactor_conversion = SI_conversions[self.reactor_volume_unit]
+        residence_time = reactor_conversion[0](self.reactor_volume) / tot_flow
+        res_time = residence_time.tolist()
+
+        conditions_dict["conditions"]["Residence time"] = [
+            res_time,
+            reactor_conversion[1],
+        ]
+
+        return conditions_dict
