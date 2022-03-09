@@ -284,8 +284,6 @@ class FlowExperiment:
 
         toml_string = tomli_w.dumps(conditions_dict)
 
-        print(toml_string)
-
         with open(filename, "w") as file:
             file.write(toml_string)
 

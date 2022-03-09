@@ -1,12 +1,6 @@
 Dataset,ExampleFile
 start_experiment_information
-dilution_factor,#NOT PROVIDED
 series_values,#NOT PROVIDED
-series_unit,#NOT PROVIDED
-series_regions,#NOT PROVIDED
-internal_ref_region,#NOT PROVIDED
-internal_ref_concentration/ M,#NOT PROVIDED
-end_experiment_information
 start_conditions
 reactor_volume/ µl,411.0
 dihydroxyacetone/ M,0.1
