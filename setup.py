@@ -6,6 +6,8 @@ setup(
     author="William E. Robinson",
     packages = ["FlowCalc"],
     install_requires=[
-        "numpy >= 1.21.5",
+        "numpy >= 1.21.1",
+        "tomli >= 2.0.1",
+        "tomli-w >= 1.0.0",
     ],
 )
