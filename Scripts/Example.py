@@ -7,7 +7,9 @@ from FlowCalc import helper_functions
 from FlowCalc import loaders
 
 # Create an experiment from a configuration file.
-experiment = loaders.flow_experiment_from_file('config.csv')
+# Either .csv or .toml formats can be used.
+_ = loaders.flow_experiment_from_csv('config.csv')
+experiment = loaders.flow_experiment_from_toml('config.toml')
 
 # Create a syringe object to contain information.
 syringe = Classes.Syringe('dihydroxyacetone')
