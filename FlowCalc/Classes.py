@@ -331,7 +331,7 @@ class FlowExperiment:
             flow_si = flow_conversion[0](self.syringes[s].flow_profile).tolist()
             flow_unit = flow_conversion[1]
 
-            conditions_dict["conditions"]["flow_profile_time"] = [flow_si, flow_unit]
+            conditions_dict["conditions"][f"{s}_flow_profile"] = [flow_si, flow_unit]
 
             tot_flow = tot_flow + flow_si
 
@@ -342,7 +342,7 @@ class FlowExperiment:
 
         conditions_dict["conditions"]["Residence time"] = [
             res_time,
-            reactor_conversion[1],
+            time_conversion[1],
         ]
 
         return conditions_dict
