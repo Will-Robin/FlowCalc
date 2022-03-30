@@ -117,6 +117,9 @@ class FlowExperiment:
         self.reactor_volume = 0.0
         self.reactor_volume_unit = ""
 
+        self.series_values = []
+        self.series_unit = ""
+
         if len(syringe_set) == 0:
             self.syringes = {}
         else:
@@ -296,8 +299,8 @@ class FlowExperiment:
 
         # Write text
         conditions_dict["Dataset"] = self.name
-        conditions_dict["Series_values"] = []
-        conditions_dict["Series_unit"] = ""
+        conditions_dict["Series_values"] = self.series_values
+        conditions_dict["Series_unit"] = self.series_unit
 
         conditions_dict["conditions"] = {}
 
