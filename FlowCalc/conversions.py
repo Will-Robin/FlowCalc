@@ -5,6 +5,8 @@ import numpy as np
 SI_conversions = {
     "L/s": (lambda x: x, "L/s"),
     "l/s": (lambda x: x, "L/s"),
+    "μl/h": (lambda x: x / (360 * 1e6), "L/s"),
+    "μl/h": (lambda x: x / (360 * 1e6), "L/s"),
     "µl/h": (lambda x: x / (360 * 1e6), "L/s"),
     "µL/h": (lambda x: x / (360 * 1e6), "L/s"),
     "μl/h": (lambda x: x / (360 * 1e6), "L/s"),
