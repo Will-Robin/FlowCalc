@@ -202,7 +202,7 @@ class FlowExperiment:
                 text += f"{time_step}\t {flow_val}\t{valve_val}\n"
 
             # Write to file
-            with open(filename, "w") as file:
+            with open(filename, "w", encoding = "utf-8") as file:
                 file.write(text)
 
     def write_conditions_file(self, filename):
@@ -278,7 +278,7 @@ class FlowExperiment:
         text += "end_conditions\n"
 
         # Write text to file.
-        with open(filename, "w") as file:
+        with open(filename, "w", encoding = "utf-8") as file:
             file.write(text)
 
     def write_toml(self, filename):
@@ -287,7 +287,7 @@ class FlowExperiment:
 
         toml_string = tomli_w.dumps(conditions_dict)
 
-        with open(filename, "w") as file:
+        with open(filename, "w", encoding = "utf-8") as file:
             file.write(toml_string)
 
     def write_to_dict(self):
