@@ -3,6 +3,36 @@ import re
 import numpy as np
 from FlowCalc.conversions import SI_conversions
 
+def field_to_SI(field):
+    """
+    Convert a field ([quantity: float, unit: string]) to its SI equivalent.
+
+    Parameters
+    ----------
+    field: list[float, string]
+
+    Returns
+    -------
+    si_field: list[float, string]
+        Original field converted to SI equivalent.
+    """
+
+    value = field[0]
+    unit = field[1]
+
+    if not unit in SI_conversions:
+        print(f"No conversion for unit {value}/ {unit}.")
+        print("Returning original value and unit.")
+        return field
+
+    conversion_function, si_unit = SI_conversions[unit]
+
+    si_value = conversion_function(value)
+    
+    si_field = [si_value, si_unit] 
+
+    return si_field
+
 
 def extend_flow_profile(flow_profile, extension):
     """
