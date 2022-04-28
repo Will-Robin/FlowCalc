@@ -2,7 +2,7 @@
 
 FlowCalc is a set of Python tools for planning flow experiments. Currently, it provides a way to produce `.nfp` files by building flow profiles as numpy arrays.
 
-The code is extensible towards other output types. Currently, it needs some development around unit conversions.
+The code is extensible towards other output types.
 
 Hope it's useful for you!
 
