@@ -29,6 +29,7 @@ SI_conversions = {
     "L/min": (lambda x: x / 60, "L/s"),
     "l/s": (lambda x: x, "L/s"),
     "L/s": (lambda x: x, "L/s"),
+    "L": (lambda x: x, "L"),
     "µl": (lambda x: x / 1e6, "L"),
     "µL": (lambda x: x / 1e6, "L"),
     "μL": (lambda x: x / 1e6, "L"),
