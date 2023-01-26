@@ -1,6 +1,4 @@
 import numpy as np
-from FlowCalc import flow_segments as FlS
-
 
 def time_segment(start, end, step):
     """
@@ -68,7 +66,7 @@ def sine_wave_flow(period, amplitude, phase, offset, time):
     return wave
 
 
-def _1gaussian(x, amp1, cen1, sigma1):
+def gaussian_1(x, amp1, cen1, sigma1):
     """
     A single gaussian function
     Parameters
@@ -111,6 +109,7 @@ def generate_wave_packet(time, amp, period, center, sigma, offset, phase=0):
     -------
     WP: array
     """
-    gauss_component = FlS._1gaussian(time, amp, center, sigma)
-    WP = FlS.sine_wave_flow(period, gauss_component, phase, offset, time)
-    return WP
+    gauss_component = gaussian_1(time, amp, center, sigma)
+    wave_packet = sine_wave_flow(period, gauss_component, phase, offset, time)
+    return wave_packet
+

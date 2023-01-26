@@ -1,2 +1,2 @@
-Exp_code = "ExampleFile"
-Reactor_volume = [411.0, "µl"]
+exp_code = "ExampleFile"
+reactor_volume = [411.0, "µl"]
