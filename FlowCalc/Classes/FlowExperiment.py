@@ -2,7 +2,7 @@ import sys
 import numpy as np
 import tomli_w
 
-from FlowCalc.conversions import SI_conversions
+from FlowCalc.Utils import SI_conversions
 
 
 class FlowExperiment:
@@ -25,6 +25,9 @@ class FlowExperiment:
         self.name = exp_name
         self.reactor_volume = 0.0
         self.reactor_volume_unit = ""
+
+        self.temperature = 0.0
+        self.temperature_unit = ""
 
         self.series_values = []
         self.series_unit = ""
