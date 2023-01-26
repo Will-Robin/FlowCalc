@@ -1,8 +1,7 @@
-CLASSES = ../FlowCalc/Classes.py
+CLASSES = ../FlowCalc/Classes/*.py
 CONV = ../FlowCalc/conversions.py
 FLOW = ../FlowCalc/flow_segments.py
 HELPERS = ../FlowCalc/helper_functions.py
-LOADERS = ../FlowCalc/loaders.py
 
 FLOWCALC=$(CLASSES) $(CONV) $(FLOW) $(HELPERS) $(LOADERS)
 
