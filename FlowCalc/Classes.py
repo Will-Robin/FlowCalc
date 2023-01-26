@@ -79,6 +79,7 @@ class Syringe:
 
         self.time = time_vals
         self.time_unit = time_unit
+        self.calculate_timesteps()
 
         self.flow_profile = flow_profile
         self.flow_unit = flow_unit
