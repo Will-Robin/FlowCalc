@@ -4,12 +4,12 @@ import numpy as np
 from FlowCalc import Classes
 from FlowCalc import flow_segments
 from FlowCalc import helper_functions
-from FlowCalc import loaders
+from FlowCalc import Loading
 
 # Create an experiment from a configuration file.
 # Either .csv or .toml formats can be used.
-_ = loaders.flow_experiment_from_csv('config.csv')
-experiment = loaders.flow_experiment_from_toml('config.toml')
+_ = Loading.experiment_from_csv('config.csv')
+experiment = Loading.experiment_from_toml('config.toml')
 
 # Create a syringe object to contain information.
 syringe = Classes.Syringe('dihydroxyacetone')
