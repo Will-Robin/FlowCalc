@@ -190,6 +190,27 @@ class FlowExperiment:
         with open(filename, "w", encoding="utf-8") as file:
             file.write(text)
 
+    def write_csv(self, filename):
+        """
+        Write a simple .csv file of the experiment's syringes.
+        """
+
+        header = ",".join(["time"]+[*self.syringes])
+
+        time = np.stack([self.syringes[s].time for s in self.syringes], axis = 0)
+        data = np.stack([self.syringes[s].flow_profile for s in self.syringes], axis = 0)
+        time = time.T
+        data = data.T
+
+        with open(filename, "w") as f:
+            f.write(f"{header}\n")
+            for x in range(0, data.shape[0]):
+                f.write(f"{time[x,0]}")
+                for y in range(0, data.shape[1]):
+                    f.write(f",{data[x,y]}")
+                f.write("\n")
+
+
     def write_toml(self, filename):
 
         conditions_dict = self.write_to_dict()
