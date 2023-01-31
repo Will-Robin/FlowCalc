@@ -2,8 +2,6 @@ import os
 import numpy as np
 
 from FlowCalc import Classes
-from FlowCalc import flow_segments
-from FlowCalc import helper_functions
 from FlowCalc import Loading
 
 # Create an experiment from a configuration file.
