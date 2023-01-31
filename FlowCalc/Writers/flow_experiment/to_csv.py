@@ -3,6 +3,15 @@ import numpy as np
 def flow_experiment_to_csv(experiment, filename):
     """
     Write a simple .csv file of the experiment's syringes.
+
+    Parameters
+    ----------
+    experiment: FlowExperiment
+    filename: str
+
+    Returns
+    -------
+    None
     """
 
     header = ",".join(["time"] + [*experiment.syringes])
