@@ -1,9 +1,9 @@
 import sys
-import numpy as np
 import tomli_w
+import numpy as np
 
-from FlowCalc.conversions import SI_conversions
-
+from FlowCalc.Utils.conversions import SI_conversions
+from FlowCalc.Writers import flow_experiment_to_csv
 
 class FlowExperiment:
     def __init__(self, exp_name, syringe_set=[]):
@@ -194,22 +194,7 @@ class FlowExperiment:
         """
         Write a simple .csv file of the experiment's syringes.
         """
-
-        header = ",".join(["time"]+[*self.syringes])
-
-        time = np.stack([self.syringes[s].time for s in self.syringes], axis = 0)
-        data = np.stack([self.syringes[s].flow_profile for s in self.syringes], axis = 0)
-        time = time.T
-        data = data.T
-
-        with open(filename, "w") as f:
-            f.write(f"{header}\n")
-            for x in range(0, data.shape[0]):
-                f.write(f"{time[x,0]}")
-                for y in range(0, data.shape[1]):
-                    f.write(f",{data[x,y]}")
-                f.write("\n")
-
+        flow_experiment_to_csv(self, filename)
 
     def write_toml(self, filename):
 
