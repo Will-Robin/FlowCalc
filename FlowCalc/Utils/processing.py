@@ -35,5 +35,6 @@ def minimise_steps(flow_experiment):
         syringe = experiment.syringes.get(s)
         syringe.time = syringe.time[retain_idx]
         syringe.flow_profile = syringe.flow_profile[retain_idx]
+        syringe.calculate_timesteps()
 
     return experiment
