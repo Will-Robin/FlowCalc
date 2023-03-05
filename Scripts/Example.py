@@ -1,16 +1,13 @@
 import os
 import numpy as np
+from FlowCalc.Classes import Syringe
+from FlowCalc.Classes import FlowExperiment
+from FlowCalc.Utils import processing
+from FlowCalc.Writers import flow_experiment_to_csv
 
-from FlowCalc import Classes
-from FlowCalc import Loading
-
-# Create an experiment from a configuration file.
-# Either .csv or .toml formats can be used.
-_ = Loading.experiment_from_csv('config.csv')
-experiment = Loading.experiment_from_toml('config.toml')
-
-# Create a syringe object to contain information.
-syringe = Classes.Syringe('dihydroxyacetone')
+experiment = FlowExperiment("example")
+experiment.reactor_volume = 411
+experiment.reactor_volume_unit = "μL"
 
 # Set some values and units to use in process below.
 # Units are important.
@@ -25,18 +22,24 @@ time_axis = np.arange(0,100,time_step)
 
 flow_rates = np.full(time_axis.shape, flow_rate)
 
-# Set the properties of the syringe
-syringe.set_concentration(0.1, "M")
+# Create a syringe object, set its properties and add it
+syringe_1 = Syringe('dihydroxyacetone')
+syringe_1.set_concentration(0.1, "M")
+syringe_1.set_flow_profile(time_axis, time_unit, flow_rates, flow_units)
+experiment.add_syringe(syringe_1)
 
-syringe.set_flow_profile(time_axis, time_unit, flow_rates, flow_units)
+syringe_2 = Syringe('formaldehyde')
+syringe_2.set_concentration(0.5, "M")
+syringe_2.set_flow_profile(time_axis, time_unit, flow_rates, flow_units)
+experiment.add_syringe(syringe_2)
 
-# Add the syringe to the experiment
-experiment.add_syringe(syringe)
+# Minimise the number of flow steps in the experiment
+processing.minimise_steps(experiment)
 
 # Write flow profiles to files
 experiment.write_flow_profile('ExampleOutput')
 
 conditions_filename = f"ExampleOutput/{experiment.name}_conditions.csv"
 experiment.write_conditions_file(conditions_filename)
-experiment.write_toml("ExampleOutput/test.toml")
+flow_experiment_to_csv(experiment, "ExampleOutput/test.csv")
 

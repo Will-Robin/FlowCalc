@@ -4,6 +4,8 @@ import numpy as np
 
 from FlowCalc.Utils.conversions import SI_conversions
 from FlowCalc.Writers import flow_experiment_to_csv
+from FlowCalc.Writers import to_nfp
+
 
 class FlowExperiment:
     def __init__(self, exp_name, syringe_set=[]):
@@ -79,40 +81,7 @@ class FlowExperiment:
 
             filename = f"{path}/{self.syringes[s].name}_flow_profile.nfp"
 
-            # Get timesteps for the syringe.
-            self.syringes[s].calculate_timesteps()
-
-            syr_time_steps = self.syringes[s].timesteps
-
-            time_unit = self.syringes[s].time_unit
-
-            if time_unit in SI_conversions:
-                conversion_to_s = SI_conversions[time_unit][0]
-                time_steps_in_s = conversion_to_s(syr_time_steps)
-            else:
-                syr_name = self.syringes[s].name
-                sys.exit(
-                    f"""Syringe {syr_name}: Please provide the units for
-                        the flow profile time axis, or check if there is a
-                        conversion available in Flowcalc.conversions"""
-                )
-
-            # Convert time steps to ms
-            time_steps_in_ms = np.round(time_steps_in_s, 1) * 1000
-
-            # Build output text
-            text = ""
-            text += f"{self.syringes[s].flow_unit}\n"
-            text += f"{number_of_cycles}\n"
-
-            for x in range(0, len(self.syringes[s].flow_profile)):
-                flow_val = self.syringes[s].flow_profile[x]
-                time_step = time_steps_in_ms[x]
-                text += f"{time_step}\t {flow_val}\t{valve_val}\n"
-
-            # Write to file
-            with open(filename, "w", encoding="utf-8") as file:
-                file.write(text)
+            to_nfp(self.syringes[s], filename)
 
     def write_conditions_file(self, filename):
         """
