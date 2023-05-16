@@ -47,6 +47,8 @@ SI_conversions = {
     "uM": (lambda x: x / 1e6, "M"),
     "nM": (lambda x: x / 1e9, "M"),
 }
+
+
 def field_to_SI(field):
     """
     Convert a field ([quantity: float, unit: string]) to its SI equivalent.

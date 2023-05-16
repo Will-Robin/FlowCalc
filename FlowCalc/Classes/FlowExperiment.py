@@ -78,7 +78,6 @@ class FlowExperiment:
         """
 
         for s in self.syringes:
-
             filename = f"{path}/{self.syringes[s].name}_flow_profile.nfp"
 
             to_nfp(self.syringes[s], filename)
@@ -166,7 +165,6 @@ class FlowExperiment:
         flow_experiment_to_csv(self, filename)
 
     def write_toml(self, filename):
-
         conditions_dict = self.write_to_dict()
 
         toml_string = tomli_w.dumps(conditions_dict)
@@ -212,7 +210,6 @@ class FlowExperiment:
         tot_flow = np.zeros(len(a_syringe.time))
 
         for s in self.syringes:
-
             flow_conversion = SI_conversions[self.syringes[s].flow_unit]
 
             flow_si = flow_conversion[0](self.syringes[s].flow_profile).tolist()

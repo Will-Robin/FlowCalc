@@ -1,5 +1,6 @@
 import numpy as np
 
+
 def flow_experiment_to_csv(experiment, filename):
     """
     Write a simple .csv file of the experiment's syringes.
@@ -17,7 +18,9 @@ def flow_experiment_to_csv(experiment, filename):
     header = ",".join(["time"] + [*experiment.syringes])
 
     time = np.stack([experiment.syringes[s].time for s in experiment.syringes], axis=0)
-    data = np.stack([experiment.syringes[s].flow_profile for s in experiment.syringes], axis=0)
+    data = np.stack(
+        [experiment.syringes[s].flow_profile for s in experiment.syringes], axis=0
+    )
     time = time.T
     data = data.T
 
