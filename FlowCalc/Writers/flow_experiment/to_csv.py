@@ -1,7 +1,8 @@
 import numpy as np
+from FlowCalc.Classes import FlowExperiment
 
 
-def flow_experiment_to_csv(experiment, filename):
+def flow_experiment_to_csv(experiment: FlowExperiment, filename: str) -> None:
     """
     Write a simple .csv file of the experiment's syringes.
 

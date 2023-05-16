@@ -1,8 +1,10 @@
+import sys
 import numpy as np
+from FlowCalc.Classes import Syringe
 from FlowCalc.Utils.conversions import SI_conversions
 
 
-def to_nfp(syringe, filename):
+def syringe_to_nfp(syringe: Syringe, filename: str) -> None:
     """ """
 
     number_of_cycles = 1
@@ -40,5 +42,5 @@ def to_nfp(syringe, filename):
         text += f"{time_step}\t {flow_val}\t{valve_val}\n"
 
     # Write to file
-    with open(filename, "w", encoding="utf-8") as file:
+    with open(filename, "w", encoding="cp1252") as file:
         file.write(text)
