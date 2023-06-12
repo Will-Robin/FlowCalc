@@ -33,7 +33,7 @@ def syringe_to_nfp(syringe: Syringe, filename: str) -> None:
 
     # Build output text
     text = ""
-    text += f"{syringe.flow_unit}\n"
+    text += f"{syringe.flow_unit.replace("L","l")}\n" # Cetoni software denotes L as l.
     text += f"{number_of_cycles}\n"
 
     for x in range(0, len(syringe.flow_profile)):
