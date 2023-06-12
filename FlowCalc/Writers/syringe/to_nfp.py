@@ -40,5 +40,5 @@ def to_nfp(syringe, filename):
         text += f"{time_step}\t {flow_val}\t{valve_val}\n"
 
     # Write to file
-    with open(filename, "w", encoding="utf-8") as file:
+    with open(filename, "w", encoding="cp1252") as file:
         file.write(text)
