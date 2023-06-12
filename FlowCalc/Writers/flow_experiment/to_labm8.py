@@ -3,7 +3,7 @@ from FlowCalc.Classes import FlowExperiment
 from FlowCalc.Utils.conversions import SI_conversions
 
 
-def to_labm8(experiment, filename):
+def flow_experiment_to_labm8(experiment: FlowExperiment, filename: str) -> None:
     """
     Convert an experiment to LabM8 format.
 

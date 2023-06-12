@@ -1,7 +1,8 @@
 from FlowCalc import Classes
+from FlowCalc.Classes import FlowExperiment
 
 
-def experiment_from_csv(filename):
+def experiment_from_csv(filename: str) -> FlowExperiment:
     """
     Initialise a flow experiment from a formatted .csv file.
 
@@ -12,7 +13,7 @@ def experiment_from_csv(filename):
 
     Returns
     -------
-    experiment: Classes.FlowExperiment
+    experiment: FlowExperiment
     """
 
     with open(filename, "r", encoding="utf-8") as file:

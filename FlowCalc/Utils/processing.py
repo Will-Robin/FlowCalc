@@ -2,7 +2,8 @@ import numpy as np
 from copy import deepcopy
 from FlowCalc.Classes import FlowExperiment
 
-def minimise_steps(flow_experiment):
+
+def minimise_steps(flow_experiment: FlowExperiment) -> FlowExperiment:
     """
     Truncate flow profiles based on where flow profiles change.
     Returns a modified copy of the experiment.

@@ -1,8 +1,10 @@
+import sys
 import numpy as np
+from FlowCalc.Classes import Syringe
 from FlowCalc.Utils.conversions import SI_conversions
 
 
-def to_nfp(syringe, filename):
+def syringe_to_nfp(syringe: Syringe, filename: str) -> None:
     """ """
 
     number_of_cycles = 1

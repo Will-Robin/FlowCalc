@@ -1,9 +1,9 @@
 CLASSES = ../FlowCalc/Classes/*.py
-CONV = ../FlowCalc/conversions.py
-FLOW = ../FlowCalc/flow_segments.py
-HELPERS = ../FlowCalc/helper_functions.py
+LOADING = ../FlowCalc/Loading/*.py
+UTILS = ../FlowCalc/Utils/*.py
+WRITERS = ../FlowCalc/Writers/*.py
 
-FLOWCALC=$(CLASSES) $(CONV) $(FLOW) $(HELPERS) $(LOADERS)
+FLOWCALC=$(CLASSES) $(LOADING) $(UTILS) $(WRITERS)
 
 all: index.html
 

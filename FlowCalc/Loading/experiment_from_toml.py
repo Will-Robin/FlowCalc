@@ -1,8 +1,9 @@
 import tomli
 from FlowCalc import Classes
+from FlowCalc.Classes import FlowExperiment
 
 
-def experiment_from_toml(filename):
+def experiment_from_toml(filename: str) -> FlowExperiment:
     """
     Initialise a flow experiment from a .toml file.
 
@@ -13,7 +14,7 @@ def experiment_from_toml(filename):
 
     Returns
     -------
-    experiment: Classes.FlowExperiment
+    experiment: FlowExperiment
     """
 
     with open(filename, "r", encoding="utf-8") as file:

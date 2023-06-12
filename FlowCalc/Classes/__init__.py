@@ -1,2 +1,2 @@
-from .Syringe import Syringe
-from .FlowExperiment import FlowExperiment
+from ._syringe import Syringe
+from ._flow_experiment import FlowExperiment
